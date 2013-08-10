@@ -54,7 +54,6 @@ public:
     {
     public:
        virtual ~Function() {}
-       //! ndim - dimensionality
        virtual double calc(const double* x) const = 0;     
     };
 
@@ -85,6 +84,30 @@ public:
 CV_EXPORTS_W Ptr<DownhillSolver> createDownhillSolver(const Ptr<Solver::Function>& f=Ptr<Solver::Function>(),
         InputArray initStep=Mat_<double>(1,1,0.0),
         TermCriteria termcrit=TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS,5000,0.000001));
+
+//!particle filtering class
+class CV_EXPORTS PFSolver : public Solver
+{
+public:
+    class CV_EXPORTS Function : public Solver::Function
+    {
+    public:
+        //!if parameters have no sense due to some reason (e.g. lie outside of function domain), this function "corrects" them,
+        //!that is brings to the function domain
+        virtual void CorrectParams(double* optParams)const{}
+        //!используется когда в функции Cost() есть зависимость от уровня "замораживания"/разброса частиц.
+        virtual void SetLevel(int level, int levelsNum){}
+    };
+    virtual void GetOptParam(OutputArray params)const = 0; //- выдает текущие параметры
+    virtual int Iteration() = 0; //- делает итерацию
+    virtual void SetParticlesNum(int num)=0; //- число частиц в итерации
+    virtual void SetAlpha(double AlphaM)=0; //- параметр для изменения характера разброса чапстиц при смене уровня
+    virtual void GetParamsSTD(OutputArray std)const =0;
+    virtual void SetParamsSTD(InputArray std)=0;
+};
+
+CV_EXPORTS_W Ptr<PFSolver> createPFSolver(const Ptr<Solver::Function>& f=Ptr<Solver::Function>(),InputArray std=Mat(),
+        TermCriteria termcrit=TermCriteria(TermCriteria::MAX_ITER,5,0.0),int particlesNum=100,double alpha=1.0);
 
 //!the return codes for solveLP() function
 enum
