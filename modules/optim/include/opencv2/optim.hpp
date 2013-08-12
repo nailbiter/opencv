@@ -101,7 +101,9 @@ public:
     virtual void getOptParam(OutputArray params)const = 0; //- выдает текущие параметры
     virtual int iteration() = 0; //- делает итерацию
     virtual void setParticlesNum(int num)=0; //- число частиц в итерации
+    virtual int getParticlesNum()=0;
     virtual void setAlpha(double AlphaM)=0; //- параметр для изменения характера разброса чапстиц при смене уровня
+    virtual double getAlpha()=0;
     virtual void getParamsSTD(OutputArray std)const =0;
     virtual void setParamsSTD(InputArray std)=0;
 };
