@@ -94,15 +94,16 @@ public:
     public:
         //!if parameters have no sense due to some reason (e.g. lie outside of function domain), this function "corrects" them,
         //!that is brings to the function domain
-        virtual void correctParams(double* optParams)const{}
-        //!используется когда в функции Cost() есть зависимость от уровня "замораживания"/разброса частиц.
-        virtual void setLevel(int level, int levelsNum){}
+        virtual void correctParams(double* /*optParams*/)const{}
+        //!is used when there is a dependence on the number of iterations done in calc(), note that levels are counted starting from 1
+        virtual void setLevel(int /*level*/, int /*levelsNum*/){}
     };
-    virtual void getOptParam(OutputArray params)const = 0; //- выдает текущие параметры
-    virtual int iteration() = 0; //- делает итерацию
-    virtual void setParticlesNum(int num)=0; //- число частиц в итерации
+    //! returns current parameters
+    virtual void getOptParam(OutputArray params)const = 0;
+    virtual int iteration() = 0;
+    virtual void setParticlesNum(int num)=0;
     virtual int getParticlesNum()=0;
-    virtual void setAlpha(double AlphaM)=0; //- параметр для изменения характера разброса чапстиц при смене уровня
+    virtual void setAlpha(double AlphaM)=0;
     virtual double getAlpha()=0;
     virtual void getParamsSTD(OutputArray std)const =0;
     virtual void setParamsSTD(InputArray std)=0;
