@@ -94,16 +94,16 @@ public:
     public:
         //!if parameters have no sense due to some reason (e.g. lie outside of function domain), this function "corrects" them,
         //!that is brings to the function domain
-        virtual void CorrectParams(double* optParams)const{}
+        virtual void correctParams(double* optParams)const{}
         //!используется когда в функции Cost() есть зависимость от уровня "замораживания"/разброса частиц.
-        virtual void SetLevel(int level, int levelsNum){}
+        virtual void setLevel(int level, int levelsNum){}
     };
-    virtual void GetOptParam(OutputArray params)const = 0; //- выдает текущие параметры
-    virtual int Iteration() = 0; //- делает итерацию
-    virtual void SetParticlesNum(int num)=0; //- число частиц в итерации
-    virtual void SetAlpha(double AlphaM)=0; //- параметр для изменения характера разброса чапстиц при смене уровня
-    virtual void GetParamsSTD(OutputArray std)const =0;
-    virtual void SetParamsSTD(InputArray std)=0;
+    virtual void getOptParam(OutputArray params)const = 0; //- выдает текущие параметры
+    virtual int iteration() = 0; //- делает итерацию
+    virtual void setParticlesNum(int num)=0; //- число частиц в итерации
+    virtual void setAlpha(double AlphaM)=0; //- параметр для изменения характера разброса чапстиц при смене уровня
+    virtual void getParamsSTD(OutputArray std)const =0;
+    virtual void setParamsSTD(InputArray std)=0;
 };
 
 CV_EXPORTS_W Ptr<PFSolver> createPFSolver(const Ptr<Solver::Function>& f=Ptr<Solver::Function>(),InputArray std=Mat(),
