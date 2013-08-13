@@ -7,11 +7,10 @@
 //  copy or use the software.
 //
 //
-//                          License Agreement
+//                        Intel License Agreement
 //                For Open Source Computer Vision Library
 //
-// Copyright (C) 2000-2008, Intel Corporation, all rights reserved.
-// Copyright (C) 2009, Willow Garage Inc., all rights reserved.
+// Copyright (C) 2000, Intel Corporation, all rights reserved.
 // Third party copyrights are property of their respective owners.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -24,7 +23,7 @@
 //     this list of conditions and the following disclaimer in the documentation
 //     and/or other materials provided with the distribution.
 //
-//   * The name of the copyright holders may not be used to endorse or promote products
+//   * The name of Intel Corporation may not be used to endorse or promote products
 //     derived from this software without specific prior written permission.
 //
 // This software is provided by the copyright holders and contributors "as is" and
@@ -40,19 +39,89 @@
 //
 //M*/
 
-#include "precomp.hpp"
-#include "opencv2/video.hpp"
+#include "test_precomp.hpp"
+#include "opencv2/video/tracker.hpp"
 
-namespace cv
+using namespace cv;
+using namespace std;
+
+class CV_TrackerBaseTest : public cvtest::BaseTest
+{
+public:
+	CV_TrackerBaseTest();
+    virtual ~CV_TrackerBaseTest();
+
+};
+
+
+CV_TrackerBaseTest::CV_TrackerBaseTest()
 {
 
-bool initModule_video(void)
+}
+
+
+CV_TrackerBaseTest::~CV_TrackerBaseTest()
 {
-    return true;
-}
-
-CV_INIT_ALGORITHM(TrackerMIL, "TRACKER.MIL", 0);
-
-CV_INIT_ALGORITHM(TrackerBoosting, "TRACKER.BOOSTING", 0);
 
 }
+
+
+
+/************************************ TrackerMIL ************************************/
+
+class CV_TrackerMILTest : public CV_TrackerBaseTest
+{
+public:
+	CV_TrackerMILTest();
+	~CV_TrackerMILTest();
+
+protected:
+	void run( int );
+};
+
+CV_TrackerMILTest::CV_TrackerMILTest()
+{
+}
+
+CV_TrackerMILTest::~CV_TrackerMILTest()
+{
+}
+
+void CV_TrackerMILTest::run( int )
+{
+	ts->set_failed_test_info(cvtest::TS::FAIL_GENERIC);
+	ts->printf( cvtest::TS::LOG, "CV_TrackerMILTest to be implemented" );
+}
+
+
+/************************************ TrackerBoosting ************************************/
+
+class CV_TrackerBoostingTest : public CV_TrackerBaseTest
+{
+public:
+	CV_TrackerBoostingTest();
+	~CV_TrackerBoostingTest();
+
+protected:
+	void run( int );
+};
+
+CV_TrackerBoostingTest::CV_TrackerBoostingTest()
+{
+}
+
+CV_TrackerBoostingTest::~CV_TrackerBoostingTest()
+{
+}
+
+void CV_TrackerBoostingTest::run( int )
+{
+	ts->set_failed_test_info(cvtest::TS::FAIL_GENERIC);
+	ts->printf( cvtest::TS::LOG, "CV_TrackerBoostingTest to be implemented" );
+}
+
+
+TEST(Video_TrackerMIL, accuracy) { CV_TrackerMILTest test; test.safe_run(); }
+TEST(Video_TrackerBoosting, accuracy) { CV_TrackerBoostingTest test; test.safe_run(); }
+
+/* End of file. */

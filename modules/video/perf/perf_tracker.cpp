@@ -7,11 +7,10 @@
 //  copy or use the software.
 //
 //
-//                          License Agreement
+//                        Intel License Agreement
 //                For Open Source Computer Vision Library
 //
-// Copyright (C) 2000-2008, Intel Corporation, all rights reserved.
-// Copyright (C) 2009, Willow Garage Inc., all rights reserved.
+// Copyright (C) 2000, Intel Corporation, all rights reserved.
 // Third party copyrights are property of their respective owners.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -24,7 +23,7 @@
 //     this list of conditions and the following disclaimer in the documentation
 //     and/or other materials provided with the distribution.
 //
-//   * The name of the copyright holders may not be used to endorse or promote products
+//   * The name of Intel Corporation may not be used to endorse or promote products
 //     derived from this software without specific prior written permission.
 //
 // This software is provided by the copyright holders and contributors "as is" and
@@ -40,19 +39,9 @@
 //
 //M*/
 
-#include "precomp.hpp"
-#include "opencv2/video.hpp"
+#include "perf_precomp.hpp"
 
-namespace cv
-{
+using namespace std;
+using namespace cv;
+using namespace perf;
 
-bool initModule_video(void)
-{
-    return true;
-}
-
-CV_INIT_ALGORITHM(TrackerMIL, "TRACKER.MIL", 0);
-
-CV_INIT_ALGORITHM(TrackerBoosting, "TRACKER.BOOSTING", 0);
-
-}
