@@ -1,11 +1,13 @@
 #include "precomp.hpp"
+#define ALEX_DEBUG
 #include "debug.hpp"
 #include "opencv2/core/core_c.h"
 #include <algorithm>
+#include <typeinfo>
 #include <cmath>
 
 namespace cv{namespace optim{
-    class CV_EXPORTS PFSolverImpl : public PFSolver{
+    class PFSolverImpl : public PFSolver{
     public:
         PFSolverImpl();
         void getOptParam(OutputArray params)const;
@@ -54,8 +56,9 @@ namespace cv{namespace optim{
     }
     int PFSolverImpl::iteration(){
         if(_iter>=_maxItNum){
-            return _iter;
+            return _maxItNum+1;
         }
+
         _real_function->setLevel(_iter+1,_maxItNum);
 
         //perturb
@@ -65,14 +68,14 @@ namespace cv{namespace optim{
                     _particles(i,j)+=rng.gaussian(sigma);
             }
         }
+
         //measure
         for(int i=0;i<_particles.rows;i++){
             _real_function->correctParams((double*)_particles.row(i).data);
-            _logweight(0,i)=-_real_function->calc((double*)_particles.row(i).data);
+            _logweight(0,i)=-(_real_function->calc((double*)_particles.row(i).data));
         }
         //normalize
         normalize(_logweight);
-        //TODO
         //replicate
         Mat_<double> new_particles(_particlesNum,_std.cols);
         int num_particles=0;
@@ -92,8 +95,8 @@ namespace cv{namespace optim{
         }else{
             new_particles.copyTo(_particles);
         }
-        _iter++;
         _std=_std*_alpha;
+        _iter++;
         return _iter;
     }
     double PFSolverImpl::minimize(InputOutputArray x){
@@ -111,7 +114,7 @@ namespace cv{namespace optim{
             mat_x.copyTo(_particles.row(i));
         }
 
-        _logweight.create(1,_std.cols);
+        _logweight.create(1,_particles.rows);
         _logweight.setTo(-log(_particles.rows));
         return 0.0;
     }
@@ -135,8 +138,14 @@ namespace cv{namespace optim{
     }
     void PFSolverImpl::setFunction(const Ptr<Solver::Function>& f){
         CV_Assert(f.empty()==false);
-        Ptr<Solver::Function> myf=f;
-        PFSolver::Function *pff=dynamic_cast<PFSolver::Function*>(&(*myf));
+
+        Ptr<Solver::Function> non_const_f(f);
+        Solver::Function* f_ptr=static_cast<Solver::Function*>(non_const_f);
+
+        dprintf(("here is a pointer in setter: %p\n",f_ptr));
+        dprintf(("name: %s\n",typeid(*f_ptr).name()));
+
+        PFSolver::Function *pff=dynamic_cast<PFSolver::Function*>(f_ptr);
         CV_Assert(pff!=NULL);
         _Function=f;
         _real_function=pff;

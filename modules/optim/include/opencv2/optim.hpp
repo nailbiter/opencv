@@ -98,7 +98,6 @@ public:
         //!is used when there is a dependence on the number of iterations done in calc(), note that levels are counted starting from 1
         virtual void setLevel(int /*level*/, int /*levelsNum*/){}
     };
-    //! returns current parameters
     virtual void getOptParam(OutputArray params)const = 0;
     virtual int iteration() = 0;
     virtual void setParticlesNum(int num)=0;
@@ -110,7 +109,7 @@ public:
 };
 
 CV_EXPORTS_W Ptr<PFSolver> createPFSolver(const Ptr<Solver::Function>& f=Ptr<Solver::Function>(),InputArray std=Mat(),
-        TermCriteria termcrit=TermCriteria(TermCriteria::MAX_ITER,5,0.0),int particlesNum=100,double alpha=1.0);
+        TermCriteria termcrit=TermCriteria(TermCriteria::MAX_ITER,5,0.0),int particlesNum=100,double alpha=0.6);
 
 //!the return codes for solveLP() function
 enum
