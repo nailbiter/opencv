@@ -98,7 +98,8 @@ int main( int argc, char** argv )
 	setMouseCallback( "Tracking API", onMouse, 0 );
 
 	//instantiates the specific Tracker
-	Ptr<Tracker> tracker = Tracker::create( tracker_algorithm );
+	Ptr<Tracker> tracker;
+    tracker=Tracker::create( tracker_algorithm );
 	if ( tracker == NULL )
 	{
 		cout << "***Error in the instantiation of the tracker...***\n";

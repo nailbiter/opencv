@@ -1,2 +1,2 @@
 set(the_description "Video Analysis")
-ocv_define_module(video opencv_imgproc opencv_ml optim)
+ocv_define_module(video opencv_imgproc opencv_ml opencv_optim)

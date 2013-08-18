@@ -799,11 +799,6 @@ class CV_EXPORTS_W TrackerPF : public Tracker
 
   TrackerPF( const TrackerPF::Params &parameters = TrackerPF::Params() );
 
-  virtual ~TrackerPF();
-
-  void read( const FileNode& fn );
-  void write( FileStorage& fs ) const;
-
  protected:
 
   bool initImpl( const Mat& image, const Rect& boundingBox );
@@ -812,8 +807,6 @@ class CV_EXPORTS_W TrackerPF : public Tracker
   Params params;
   AlgorithmInfo* info() const;
 };
-(const Ptr<Solver::Function>& f=Ptr<Solver::Function>(),
- InputArray std=Mat(),
 
 } /* namespace cv */
 
