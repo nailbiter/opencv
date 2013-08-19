@@ -1,2 +1,2 @@
 set(the_description "Generic optimization")
-ocv_define_module(optim opencv_core)
+ocv_define_module(optim opencv_core opencv_highgui)
