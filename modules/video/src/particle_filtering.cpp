@@ -46,14 +46,15 @@ namespace cv{
         Mat image=responses[0];
         Ptr<TrackerTargetState> ptr;
         if(false){
-            //real implementation
             //TODO - here we do iterations
             _solver->setParamsSTD(_std);
-            _solver->minimum(_last_guess);
+            _solver->minimize(_last_guess);
+            dynamic_cast<TrackingFunctionPF*>(static_cast<optim::Solver::Function*>(_solver->getFunction()))->update(image);
         }else{
             //Mat_<double> row=(Mat_<double>(1,4)<<0.0,0.0,(double)image.cols/2,(double)image.rows/2);
             Mat_<double> row=_last_guess;
             ptr=new TrackerTargetStatePF(row);
+            dynamic_cast<TrackingFunctionPF*>(static_cast<optim::Solver::Function*>(_solver->getFunction()))->update(image);
         }
 
         setLastTargetState(ptr);
