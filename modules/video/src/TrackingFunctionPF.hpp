@@ -23,44 +23,29 @@ namespace cv{
     };
 
     TrackingFunctionPF::TrackingHistogram::TrackingHistogram(const Mat& img,int nh,int ns,int nv){
-        printf("histogram constructor was called with %d, %d and %d\n",nh,ns,nv);
 
-        uchar min=255,max=0;
-        for(int i=0;i<img.rows;i++){
-            for(int j=0;j<img.cols;j++){
-                Vec3b v=img.at<Vec3b>(i,j);
-                max=MAX(max,v.val[0]);
-                max=MAX(max,v.val[1]);
-                max=MAX(max,v.val[2]);
-                min=MIN(min,v.val[0]);
-                min=MIN(min,v.val[1]);
-                min=MIN(min,v.val[2]);
-            }}
-
-        Mat hsv(img.rows,img.cols,CV_MAKETYPE(CV_32F,3));
+        Mat hsv;
         cvtColor(img,hsv,CV_BGR2HSV);
+
         HShist=Mat_<double>(nh,ns,0.0);
         Vhist=Mat_<double>(1,nv,0.0);
 
-        printf("hi from line %d\n",__LINE__);
         for(int i=0;i<img.rows;i++){
             for(int j=0;j<img.cols;j++){
-                Vec3f pt=hsv.at<Vec3f>(i,j);
-
+                Vec3b pt=hsv.at<Vec3b>(i,j);
                 Vec3b v=img.at<Vec3b>(i,j);
-                printf("dimensions: %dx%d, min--max=%d--%d\n",img.rows,img.cols,(int)min,(int)max);
+
                 printf("%d %d\n",i,j);
-                printf(" (%d %d %d)->(%f %f %f)\n",(int)v[0],(int)v[1],(int)v[2],pt.val[0],pt.val[1],pt.val[2]);
+                printf(" (%d %d %d)->(%d %d %d)\n",(int)v[0],(int)v[1],(int)v[2],pt.val[0],pt.val[1],pt.val[2]);
                 fflush(stdout);
 
-                if(pt.val[1]>0.1 && pt.val[2]>0.2){
-                    HShist(MIN(nh-1,(int)(nh*pt.val[0]/360.0)),MIN(ns-1,(int)(ns*pt.val[1])))++;
+                if(pt.val[1]>25 && pt.val[2]>51){
+                    HShist(MIN(nh-1,(int)(nh*pt.val[0]/180.0)),MIN(ns-1,(int)(ns*(pt.val[1]/255.0))))++;
                 }else{
-                    Vhist(0,MIN(nv-1,(int)(nv*pt.val[2])))++;
+                    Vhist(0,MIN(nv-1,(int)(nv*(pt.val[2]/255.0))))++;
                 }
             }}
 
-        printf("hi from line %d\n",__LINE__);
         double total=*(sum(HShist)+sum(Vhist)).val;
         HShist/=total;
         Vhist/=total;
