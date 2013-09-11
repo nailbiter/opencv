@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <typeinfo>
 #include <cmath>
+#define WEIGHTED
 
 namespace cv{namespace optim{
     class PFSolverImpl : public PFSolver{
@@ -44,11 +45,13 @@ namespace cv{namespace optim{
     }
     void PFSolverImpl::getOptParam(OutputArray params)const{
         params.create(1,_std.rows,CV_64FC1);
+        Mat mat(1,_std.rows,CV_64FC1);
 #ifdef WEIGHTED
-        params.setTo(0.0);
+        mat.setTo(0.0);
         for(int i=0;i<_particles.rows;i++){
-            params+=_particles.row(i)/exp(-_logweight(0,i));
+            mat+=_particles.row(i)/exp(-_logweight(0,i));
         }
+        mat.copyTo(params);
 #else
         params.create(1,_std.rows,CV_64FC1);
         _particles.row(std::max_element(_logweight.begin(),_logweight.end())-_logweight.begin()).copyTo(params);

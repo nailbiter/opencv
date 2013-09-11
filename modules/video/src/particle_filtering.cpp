@@ -1,5 +1,6 @@
 #include "precomp.hpp"
 #include "opencv2/optim.hpp"
+#define ALEX_DEBUG
 #include "TrackingFunctionPF.hpp"
 
 namespace cv{
@@ -44,27 +45,33 @@ namespace cv{
     void TrackerModelPF::modelEstimationImpl( const std::vector<Mat>& responses ){
         CV_Assert(responses.size()==1);
         Mat image=responses[0];
-        Ptr<TrackerTargetState> ptr;
-        if(false){
+        Ptr<TrackerTargetState> ptr=0;
+        if(true){
             //TODO - here we do iterations
             _solver->setParamsSTD(_std);
             _solver->minimize(_last_guess);
             dynamic_cast<TrackingFunctionPF*>(static_cast<optim::Solver::Function*>(_solver->getFunction()))->update(image);
+            while(_solver->iteration() <= _solver->getTermCriteria().maxCount);
+            _solver->getOptParam(_last_guess);
+            ptr=Ptr<TrackerTargetStatePF>(new TrackerTargetStatePF(_last_guess));
         }else{
             //Mat_<double> row=(Mat_<double>(1,4)<<0.0,0.0,(double)image.cols/2,(double)image.rows/2);
             Mat_<double> row=_last_guess;
-            ptr=new TrackerTargetStatePF(row);
-            dynamic_cast<TrackingFunctionPF*>(static_cast<optim::Solver::Function*>(_solver->getFunction()))->update(image);
+            TrackerTargetStatePF *real_ptr=new TrackerTargetStatePF(row);
+            ptr=real_ptr;
+            dynamic_cast<TrackingFunctionPF*>(static_cast<optim::Solver::Function*>(_solver->getFunction()))->update(image(real_ptr->getRect()));
         }
 
+        dprintf(("before setLastTargetState() line %d\n",__LINE__));
         setLastTargetState(ptr);
+        dprintf(("after setLastTargetState() line %d\n",__LINE__));
     }
     TrackerPF::Params::Params(){
         //if these def params will be changed, it might also have sense to change def params at optim.hpp
         iterationNum=5;
         particlesNum=100;
         alpha=0.6;
-        std=(Mat_<double>(1,4)<<1.0,1.0,1.0,1.0); 
+        std=(Mat_<double>(1,4)<<5.0,5.0,5.0,5.0); 
     }
     TrackerPF::TrackerPF( const TrackerPF::Params &parameters){
         params=parameters;
