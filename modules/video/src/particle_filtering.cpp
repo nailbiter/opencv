@@ -68,10 +68,10 @@ namespace cv{
     }
     TrackerPF::Params::Params(){
         //if these def params will be changed, it might also have sense to change def params at optim.hpp
-        iterationNum=5;
+        iterationNum=20;
         particlesNum=100;
-        alpha=0.6;
-        std=(Mat_<double>(1,4)<<5.0,5.0,5.0,5.0); 
+        alpha=0.9;
+        std=(Mat_<double>(1,4)<<15.0,15.0,15.0,15.0); 
     }
     TrackerPF::TrackerPF( const TrackerPF::Params &parameters){
         params=parameters;
@@ -92,30 +92,3 @@ namespace cv{
         return true;
     }
 }
-
-/*class TrackerModel
-{
- public:
-  TrackerModel();
-  virtual ~TrackerModel(){}
-  bool setTrackerStateEstimator( Ptr<TrackerStateEstimator> trackerStateEstimator ){}
-  void modelUpdate(){}
-  bool runStateEstimator(){}
-  Ptr<TrackerStateEstimator> getTrackerStateEstimator() const{}
-
-  void setLastTargetState( const Ptr<TrackerTargetState>& lastTargetState );
-  Ptr<TrackerTargetState> getLastTargetState() const;
-  void modelEstimation( const std::vector<Mat>& responses );
-  const std::vector<ConfidenceMap>& getConfidenceMaps() const;
-  const ConfidenceMap& getLastConfidenceMap() const;
- protected:
-  std::vector<ConfidenceMap> confidenceMaps;
-  Ptr<TrackerStateEstimator> stateEstimator;
-  ConfidenceMap currentConfidenceMap;
-  Trajectory trajectory;
-  virtual void modelEstimationImpl( const std::vector<Mat>& responses ) - make an iteration here
-  virtual void modelUpdateImpl(){}
-};
-    typedef std::vector<std::pair<Ptr<TrackerTargetState>, float> > ConfidenceMap;
-    typedef std::vector<Ptr<TrackerTargetState> > Trajectory;
-*/

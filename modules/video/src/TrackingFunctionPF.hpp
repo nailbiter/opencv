@@ -87,7 +87,11 @@ namespace cv{
         return sqrt(res);
     }
     double TrackingFunctionPF::calc(const double* x) const{
-        return _origHist.dist(TrackingHistogram(_image(rectFromRow(x)),_nh,_ns,_nv));
+        Rect rect=rectFromRow(x);
+        if(rect.area()==0){
+            return 2.0;
+        }
+        return _origHist.dist(TrackingHistogram(_image(rect),_nh,_ns,_nv));
     }
     TrackingFunctionPF::TrackingFunctionPF(const Mat& chosenRect):_nh(HIST_SIZE),_ns(HIST_SIZE),_nv(HIST_SIZE),_origHist(chosenRect,_nh,_ns,_nv){
         dprintf(("function constructor was called\n"));
@@ -108,6 +112,16 @@ namespace cv{
         pt[1]=CLIP(pt[1],0.0,_image.rows+0.9);
         pt[2]=CLIP(pt[2],0.0,_image.cols+0.9);
         pt[3]=CLIP(pt[3],0.0,_image.rows+0.9);
+        if(pt[0]>pt[2]){
+            double tmp=pt[0];
+            pt[0]=pt[2];
+            pt[2]=tmp;
+        }
+        if(pt[1]>pt[3]){
+            double tmp=pt[1];
+            pt[1]=pt[3];
+            pt[3]=tmp;
+        }
     }
     Rect TrackingFunctionPF::rectFromRow(const double* row){
         return Rect(Point_<int>((int)row[0],(int)row[1]),Point_<int>((int)row[2],(int)row[3]));
